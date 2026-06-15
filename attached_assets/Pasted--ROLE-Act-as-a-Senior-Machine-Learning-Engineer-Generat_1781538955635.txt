@@ -1,0 +1,499 @@
+# ROLE
+
+Act as a Senior Machine Learning Engineer, Generative AI Engineer, Full Stack Developer, MLOps Engineer, and Technical Mentor.
+
+You are helping me build a COMPLETE, PRODUCTION-READY Generative AI portfolio project inside Replit.
+
+Your goal is not only to generate code but also to architect, implement, test, document, and deploy the entire project.
+
+Assume I am a Computer Science student building a project for Machine Learning Engineer and Generative AI internship applications.
+
+---
+
+# PROJECT TITLE
+
+Synthetic Data Generation + TinyLlama Fine-Tuning using LoRA
+
+---
+
+# PROJECT GOAL
+
+Build a complete end-to-end Generative AI system that:
+
+1. Scrapes a Wikipedia article.
+2. Generates synthetic Question-Answer pairs using Mistral through Ollama.
+3. Creates a custom dataset automatically.
+4. Fine-tunes TinyLlama using PEFT + LoRA.
+5. Evaluates model performance.
+6. Compares Base vs Fine-Tuned model.
+7. Provides a professional Gradio web interface.
+8. Includes deployment-ready configuration.
+9. Includes documentation and architecture diagrams.
+
+The project must be impressive enough to showcase during interviews.
+
+---
+
+# IMPORTANT REPLIT REQUIREMENTS
+
+Build everything specifically for Replit.
+
+Requirements:
+
+* Python 3.11
+* Replit compatible
+* Clean folder structure
+* Replit workflows
+* Replit Secrets support
+* Works with CPU fallback
+* GPU support if available
+* Automatic dependency installation
+* One-click run experience
+
+Create:
+
+.replit
+
+replit.nix
+
+requirements.txt
+
+README.md
+
+---
+
+# TECH STACK
+
+Python
+
+Transformers
+
+PEFT
+
+LoRA
+
+Accelerate
+
+Datasets
+
+Gradio
+
+Pandas
+
+NumPy
+
+Matplotlib
+
+Plotly
+
+Scikit-Learn
+
+BeautifulSoup
+
+Requests
+
+TQDM
+
+Hugging Face
+
+Ollama
+
+TinyLlama
+
+Mistral
+
+---
+
+# PROJECT STRUCTURE
+
+Generate the following complete structure:
+
+project/
+
+data/
+
+raw/
+
+processed/
+
+synthetic/
+
+models/
+
+base/
+
+adapter/
+
+merged/
+
+src/
+
+scraper/
+
+generator/
+
+training/
+
+evaluation/
+
+inference/
+
+ui/
+
+utils/
+
+configs/
+
+tests/
+
+reports/
+
+charts/
+
+logs/
+
+notebooks/
+
+README.md
+
+requirements.txt
+
+.replit
+
+replit.nix
+
+run_all.py
+
+---
+
+# PHASE 1: SCRAPE WIKIPEDIA
+
+Create production-ready code.
+
+Requirements:
+
+* Input any Wikipedia URL.
+* Extract article content only.
+* Remove citations.
+* Remove references.
+* Remove HTML.
+* Clean text.
+* Split into chunks.
+* Save raw text.
+* Save cleaned text.
+* Save chunks as JSON.
+
+Include:
+
+* logging
+* exception handling
+* retry logic
+
+---
+
+# PHASE 2: SYNTHETIC DATA GENERATION
+
+Use Mistral through Ollama.
+
+For each chunk generate:
+
+* factual questions
+* reasoning questions
+* conceptual questions
+* definition questions
+
+Generate:
+
+200–500 Q&A pairs.
+
+Output format:
+
+{
+"question":"...",
+"answer":"..."
+}
+
+Add:
+
+* validation
+* duplicate removal
+* retry logic
+* progress bars
+
+Save:
+
+synthetic_qa.json
+
+synthetic_qa.csv
+
+---
+
+# PHASE 3: DATA ANALYSIS
+
+Generate scripts that calculate:
+
+* dataset size
+* average question length
+* average answer length
+* vocabulary size
+* duplicate percentage
+
+Create charts:
+
+* question length histogram
+* answer length histogram
+* word frequency chart
+
+Save charts to reports/charts.
+
+---
+
+# PHASE 4: FINE-TUNING
+
+Model:
+
+TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
+Libraries:
+
+* transformers
+* peft
+* accelerate
+* bitsandbytes
+* datasets
+
+LoRA Configuration:
+
+r=16
+
+alpha=32
+
+dropout=0.05
+
+target modules:
+
+q_proj
+
+v_proj
+
+Training:
+
+* epochs=3
+* batch size=4
+* gradient accumulation=2
+* learning rate=2e-4
+
+Save:
+
+* checkpoints
+* adapter
+* merged model
+
+Support:
+
+* Replit CPU mode
+* Google Colab GPU
+* Local machine
+
+---
+
+# PHASE 5: EVALUATION
+
+Compare:
+
+BASE MODEL
+
+vs
+
+FINE-TUNED MODEL
+
+Metrics:
+
+* Exact Match
+* BLEU
+* ROUGE-L
+* BERTScore
+
+Generate:
+
+evaluation_report.html
+
+evaluation_report.md
+
+evaluation_report.json
+
+Create charts comparing:
+
+before fine-tuning
+
+after fine-tuning
+
+---
+
+# PHASE 6: INFERENCE
+
+Create a reusable inference pipeline.
+
+Input:
+
+Question
+
+Output:
+
+Base Model Response
+
+Fine-Tuned Response
+
+Latency
+
+Token Count
+
+Confidence Score
+
+---
+
+# PHASE 7: GRADIO WEB APP
+
+Build a professional Gradio interface.
+
+Features:
+
+* Modern layout
+* Side-by-side comparison
+* Example questions
+* Temperature slider
+* Max token slider
+* Response time display
+* Download results
+
+Layout:
+
+LEFT COLUMN
+
+Base TinyLlama
+
+RIGHT COLUMN
+
+Fine-Tuned TinyLlama
+
+CENTER
+
+Question Input
+
+---
+
+# PHASE 8: MLOPS FEATURES
+
+Add:
+
+* Logging
+* Config files
+* Environment variables
+* Model versioning
+* Reproducibility
+* Experiment tracking
+
+Create:
+
+config.yaml
+
+logging configuration
+
+training configuration
+
+---
+
+# PHASE 9: DOCUMENTATION
+
+Generate:
+
+Professional README.md
+
+Include:
+
+* Problem Statement
+* Architecture
+* Workflow
+* Setup
+* Installation
+* Usage
+* Screenshots
+* Results
+* Future Scope
+
+---
+
+# PHASE 10: ARCHITECTURE DIAGRAMS
+
+Generate Mermaid diagrams for:
+
+1. System Architecture
+
+2. Data Pipeline
+
+3. Fine-Tuning Workflow
+
+4. Inference Workflow
+
+5. Deployment Workflow
+
+---
+
+# PHASE 11: INTERVIEW PREPARATION
+
+Generate:
+
+20 Interview Questions
+
+Detailed Answers
+
+Topics:
+
+* LLMs
+* LoRA
+* PEFT
+* Fine-Tuning
+* Synthetic Data
+* TinyLlama
+* Transformers
+* Ollama
+* Mistral
+* Prompt Engineering
+
+---
+
+# PHASE 12: RESUME CONTENT
+
+Generate:
+
+ATS-friendly resume points.
+
+LinkedIn description.
+
+GitHub project description.
+
+Project impact statement.
+
+Quantified achievements.
+
+---
+
+# CODE QUALITY RULES
+
+* Production-ready code only.
+* No pseudocode.
+* No placeholders.
+* Use type hints.
+* Use docstrings.
+* Use modular architecture.
+* Add comments for beginners.
+* Add logging.
+* Add exception handling.
+* Add progress indicators.
+* Generate COMPLETE code for every file.
+
+Build the project step-by-step.
+
+Explain every phase before generating code.
+
+At the end, provide exact commands to run the project in Replit and verify that everything works correctly.

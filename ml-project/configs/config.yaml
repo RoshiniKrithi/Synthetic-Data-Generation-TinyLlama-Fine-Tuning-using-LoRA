@@ -1,0 +1,96 @@
+project:
+  name: "Synthetic Data Generation + TinyLlama Fine-Tuning with LoRA"
+  version: "1.0.0"
+  description: "End-to-end GenAI pipeline for internship portfolio"
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  data_synthetic: "data/synthetic"
+  models_base: "models/base"
+  models_adapter: "models/adapter"
+  models_merged: "models/merged"
+  reports: "reports"
+  charts: "reports/charts"
+  logs: "logs"
+
+scraper:
+  wikipedia_url: "https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)"
+  chunk_size: 500
+  chunk_overlap: 50
+  max_chunks: 30
+  retry_attempts: 3
+  retry_delay: 2
+
+generator:
+  ollama_model: "mistral"
+  ollama_base_url: "http://localhost:11434"
+  qa_pairs_per_chunk: 5
+  max_qa_pairs: 300
+  temperature: 0.7
+  question_types:
+    - "factual"
+    - "reasoning"
+    - "conceptual"
+    - "definition"
+  retry_attempts: 3
+
+model:
+  base_model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+  max_length: 512
+  device: "auto"
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - "q_proj"
+    - "v_proj"
+  bias: "none"
+  task_type: "CAUSAL_LM"
+
+training:
+  epochs: 3
+  batch_size: 4
+  gradient_accumulation_steps: 2
+  learning_rate: 2.0e-4
+  warmup_steps: 100
+  save_steps: 100
+  eval_steps: 100
+  logging_steps: 10
+  max_grad_norm: 1.0
+  weight_decay: 0.001
+  fp16: false
+  bf16: false
+  dataloader_num_workers: 0
+  seed: 42
+
+evaluation:
+  metrics:
+    - "exact_match"
+    - "bleu"
+    - "rouge_l"
+    - "bertscore"
+  test_split: 0.2
+  max_samples: 50
+  bertscore_model: "distilbert-base-uncased"
+
+inference:
+  max_new_tokens: 256
+  temperature: 0.7
+  top_p: 0.9
+  do_sample: true
+  repetition_penalty: 1.1
+
+gradio:
+  host: "0.0.0.0"
+  port: 8000
+  share: false
+  title: "TinyLlama Fine-Tuning Demo"
+  description: "Base vs Fine-Tuned model comparison"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+  file: "logs/project.log"
