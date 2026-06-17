@@ -60,9 +60,20 @@ def main() -> None:
             base.load()
             state["base"] = base
 
-            if args.base_only:
+            adapter_dir = ROOT / config.get("paths", {}).get("models_adapter", "models/adapter")
+            adapter_exists = adapter_dir.exists() and any(adapter_dir.iterdir())
+
+            if args.base_only or not adapter_exists:
+                # Reuse the same model object — avoids loading 2 × 1.1B into RAM
                 state["ft"] = base
-                logger.info("--base-only: using base model for both columns.")
+                if not adapter_exists:
+                    logger.info(
+                        "No LoRA adapter found at %s — "
+                        "using base model for both columns (run Phase 4 to train).",
+                        adapter_dir,
+                    )
+                else:
+                    logger.info("--base-only: using base model for both columns.")
             else:
                 logger.info("Background: loading fine-tuned model …")
                 ft = InferencePipeline(config, use_fine_tuned=True)
@@ -135,6 +146,14 @@ def main() -> None:
             )
         if state["error"]:
             return f"❌ **Error:** {state['error']}"
+        adapter_dir = ROOT / config.get("paths", {}).get("models_adapter", "models/adapter")
+        adapter_exists = adapter_dir.exists() and any(adapter_dir.iterdir())
+        if not adapter_exists:
+            return (
+                "✅ **Base model ready!** (both columns use base TinyLlama — "
+                "run `python run_all.py --phases 4` in the shell to train the LoRA adapter, "
+                "then restart this app to compare)"
+            )
         return "✅ **Models ready!** Enter a question below and click Generate."
 
     def clear_all() -> tuple:
