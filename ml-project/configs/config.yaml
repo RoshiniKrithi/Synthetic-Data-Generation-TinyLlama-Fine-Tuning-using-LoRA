@@ -89,6 +89,9 @@ gradio:
   share: false
   title: "TinyLlama Fine-Tuning Demo"
   description: "Base vs Fine-Tuned model comparison"
+  # Lightweight model used for the interactive UI demo (fits in free-tier RAM).
+  # The training pipeline still uses model.base_model (TinyLlama).
+  demo_model: "gpt2"
 
 logging:
   level: "INFO"

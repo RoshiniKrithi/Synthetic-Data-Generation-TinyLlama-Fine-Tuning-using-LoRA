@@ -49,14 +49,20 @@ def main() -> None:
     from fastapi import FastAPI, Request
     from fastapi.responses import Response
 
+    # ── Demo model (small, fits in free-tier RAM) ─────────────────────
+    demo_model = config.get("gradio", {}).get("demo_model", "gpt2")
+    logger.info("UI demo model: %s", demo_model)
+
     # ── Shared model state (loaded in background thread) ─────────────
-    state: dict = {"base": None, "ft": None, "loading": True, "error": None}
+    state: dict = {"base": None, "ft": None, "loading": True, "error": None,
+                   "demo_model": demo_model}
 
     def _load_models() -> None:
         from src.inference.pipeline import InferencePipeline
         try:
-            logger.info("Background: loading base model …")
-            base = InferencePipeline(config, use_fine_tuned=False)
+            logger.info("Background: loading demo model (%s) …", demo_model)
+            base = InferencePipeline(config, use_fine_tuned=False,
+                                     model_name_override=demo_model)
             base.load()
             state["base"] = base
 
@@ -64,19 +70,20 @@ def main() -> None:
             adapter_exists = adapter_dir.exists() and any(adapter_dir.iterdir())
 
             if args.base_only or not adapter_exists:
-                # Reuse the same model object — avoids loading 2 × 1.1B into RAM
+                # Reuse the same model object — avoids double RAM usage
                 state["ft"] = base
                 if not adapter_exists:
                     logger.info(
                         "No LoRA adapter found at %s — "
-                        "using base model for both columns (run Phase 4 to train).",
+                        "using demo model for both columns (run Phase 4 to train).",
                         adapter_dir,
                     )
                 else:
-                    logger.info("--base-only: using base model for both columns.")
+                    logger.info("--base-only: using demo model for both columns.")
             else:
                 logger.info("Background: loading fine-tuned model …")
-                ft = InferencePipeline(config, use_fine_tuned=True)
+                ft = InferencePipeline(config, use_fine_tuned=True,
+                                       model_name_override=demo_model)
                 ft.load()
                 state["ft"] = ft
 
@@ -170,8 +177,9 @@ def main() -> None:
     with demo_ctx as demo:
         gr.Markdown("# 🤖 TinyLlama Fine-Tuning Demo")
         gr.Markdown(
-            "Compare **Base TinyLlama-1.1B** vs **LoRA Fine-Tuned TinyLlama** "
-            "trained on Wikipedia synthetic Q&A pairs generated via Mistral + Ollama."
+            f"Interactive demo using **{demo_model}** (lightweight preview model). "
+            "The full pipeline trains **TinyLlama-1.1B + LoRA** on Wikipedia synthetic Q&A — "
+            "run `python run_all.py --phases 4` to train, then restart to compare."
         )
 
         status_box  = gr.Markdown(value=check_status())
