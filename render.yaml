@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: tinyllama-finetuning-demo
+    env: python
+    rootDir: ml-project
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu"
+    startCommand: "python launch_ui.py"
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.10.12
