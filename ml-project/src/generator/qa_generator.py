@@ -153,9 +153,12 @@ class QAGenerator:
         try:
             import ollama as _ollama  # lazy import — Ollama may not be installed
 
+            base_url = self.cfg.get("ollama_base_url", "http://127.0.0.1:11434")
+            client = _ollama.Client(host=base_url)
+
             for attempt in range(1, self.retry_attempts + 1):
                 try:
-                    resp = _ollama.generate(
+                    resp = client.generate(
                         model=self.model,
                         prompt=prompt,
                         options={"temperature": self.temperature},

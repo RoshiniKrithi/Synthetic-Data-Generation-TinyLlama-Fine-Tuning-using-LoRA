@@ -6,6 +6,11 @@ from __future__ import annotations
 import json
 import logging
 import os
+
+# Redirect HF Cache to D: drive due to C: drive running out of space (0 bytes free)
+os.environ["HF_HOME"] = "d:/Synthetic Data Generation + TinyLlama Fine-Tuning using LoRA/Asset-Manager/Asset-Manager/hf_cache"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+
 import time
 from pathlib import Path
 from typing import Any
@@ -30,7 +35,7 @@ def setup_logging(log_file: str = "logs/project.log", level: str = "INFO") -> lo
         format=fmt,
         handlers=[
             logging.StreamHandler(),
-            logging.FileHandler(log_file),
+            logging.FileHandler(log_file, encoding="utf-8"),
         ],
     )
     return logging.getLogger(__name__)

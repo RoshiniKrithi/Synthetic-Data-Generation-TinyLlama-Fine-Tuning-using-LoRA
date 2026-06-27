@@ -31,6 +31,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--url", default=None, help="Wikipedia URL to scrape")
     p.add_argument("--chunks", type=int, default=None, help="Override max chunks from config")
     p.add_argument("--pairs", type=int, default=None, help="Override max Q&A pairs from config")
+    p.add_argument(
+        "--use-agents",
+        action="store_true",
+        help="Use the Multi-Agent pipeline (Generator→Critic→Refiner) for Phase 2.",
+    )
     p.add_argument("--config", default=str(ROOT / "configs" / "config.yaml"))
     return p.parse_args()
 
@@ -46,6 +51,8 @@ def main() -> None:
         config["scraper"]["max_chunks"] = args.chunks
     if args.pairs:
         config["generator"]["max_qa_pairs"] = args.pairs
+        if "agents" in config:
+            config["agents"]["max_qa_pairs"] = args.pairs
 
     # Phase 1 — Scrape
     logger.info("─── Phase 1: Scraping Wikipedia ───")
@@ -53,21 +60,28 @@ def main() -> None:
     scraper = WikipediaScraper(config)
     scrape_result = scraper.run(url=args.url)
     chunks = scrape_result["chunks"]
-    logger.info("✓ %d chunks scraped.", len(chunks))
+    logger.info("[OK] %d chunks scraped.", len(chunks))
 
     # Phase 2 — Generate
     logger.info("─── Phase 2: Generating Q&A pairs ───")
-    logger.info("Make sure Ollama is running: ollama serve && ollama pull mistral")
-    from src.generator.qa_generator import QAGenerator
-    gen = QAGenerator(config)
-    pairs = gen.run(chunks)
-    logger.info("✓ %d Q&A pairs generated.", len(pairs))
+    if args.use_agents:
+        logger.info("Using Multi-Agent generation (Generator → Critic → Refiner).")
+        from src.generator.agents import MultiAgentOrchestrator
+        orchestrator = MultiAgentOrchestrator(config)
+        pairs = orchestrator.run(chunks)
+    else:
+        logger.info("Using Classic generation.")
+        logger.info("Make sure Ollama is running: ollama serve && ollama pull mistral")
+        from src.generator.qa_generator import QAGenerator
+        gen = QAGenerator(config)
+        pairs = gen.run(chunks)
+    logger.info("[OK] %d Q&A pairs generated.", len(pairs))
 
     # Phase 3 — Analyse
     logger.info("─── Phase 3: Dataset analysis ───")
     from src.analysis.data_analysis import run_analysis
     stats = run_analysis(config)
-    logger.info("✓ Dataset stats: %s", stats)
+    logger.info("[OK] Dataset stats: %s", stats)
 
     print("\n" + "=" * 50)
     print(f"Done! Generated {len(pairs)} Q&A pairs.")

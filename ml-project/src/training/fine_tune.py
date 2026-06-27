@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 def _format_prompt(example: dict) -> str:
-    """Format a Q&A pair into a chat-style training prompt.
+    """Format a Q&A pair into a plain-text training prompt.
+
+    Uses a generic format compatible with any causal LM (GPT-2, TinyLlama, etc.).
 
     Args:
         example: Dict with ``question`` and ``answer`` keys.
@@ -24,9 +26,8 @@ def _format_prompt(example: dict) -> str:
         Formatted string for causal language model training.
     """
     return (
-        f"<|system|>\nYou are a helpful assistant.\n"
-        f"<|user|>\n{example['question']}\n"
-        f"<|assistant|>\n{example['answer']}</s>"
+        f"Question: {example['question']}\n"
+        f"Answer: {example['answer']}\n"
     )
 
 
@@ -62,10 +63,11 @@ class LoRAFineTuner:
 
         import torch
         from datasets import Dataset
-        from peft import LoraConfig, TaskType, get_peft_model
+        from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
         from transformers import (
             AutoModelForCausalLM,
             AutoTokenizer,
+            BitsAndBytesConfig,
             DataCollatorForLanguageModeling,
             Trainer,
             TrainingArguments,
@@ -83,16 +85,31 @@ class LoRAFineTuner:
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "right"
 
-        # ------ Base model ------
-        logger.info("Loading base model …")
-        load_kwargs: dict[str, Any] = {
-            "trust_remote_code": True,
-            "torch_dtype": torch.float32,
-        }
-        if device == "cuda":
-            load_kwargs["device_map"] = "auto"
+        # ------ Base model (8-bit quantized to save RAM) ------
+        logger.info("Loading base model with 8-bit quantization …")
+        use_8bit = self._bitsandbytes_available() and device == "cuda"
 
-        model = AutoModelForCausalLM.from_pretrained(self.base_model_name, **load_kwargs)
+        if use_8bit:
+            bnb_config = BitsAndBytesConfig(load_in_8bit=True)
+            model = AutoModelForCausalLM.from_pretrained(
+                self.base_model_name,
+                quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+            model = prepare_model_for_kbit_training(model)
+            logger.info("Model loaded in 8-bit (GPU).")
+        else:
+            # CPU path: load shard-by-shard to minimise peak RAM
+            logger.info("Loading in float32 with low_cpu_mem_usage (CPU path) …")
+            model = AutoModelForCausalLM.from_pretrained(
+                self.base_model_name,
+                dtype=torch.float32,
+                low_cpu_mem_usage=True,
+                trust_remote_code=True,
+            )
+            logger.info("Model loaded in float32 (CPU).")
+
         model.config.use_cache = False
 
         # ------ LoRA config ------
@@ -107,7 +124,16 @@ class LoRAFineTuner:
         model = get_peft_model(model, lora_config)
         model.print_trainable_parameters()
 
-        # ------ Dataset ------
+        # Enable gradient checkpointing to cut activation memory ~50 %
+        model.enable_input_require_grads()
+        model.gradient_checkpointing_enable()
+
+        # Cap dataset size for CPU training (avoids OOM on large tokenized batches)
+        max_samples = min(len(qa_pairs), 150)
+        if max_samples < len(qa_pairs):
+            logger.info("Capping dataset to %d samples for CPU training.", max_samples)
+            qa_pairs = qa_pairs[:max_samples]
+
         prompts = [_format_prompt(p) for p in qa_pairs]
         raw_ds = Dataset.from_dict({"text": prompts})
         split = raw_ds.train_test_split(test_size=0.1, seed=self.cfg_train["seed"])
@@ -133,18 +159,19 @@ class LoRAFineTuner:
             num_train_epochs=self.cfg_train["epochs"],
             per_device_train_batch_size=self.cfg_train["batch_size"],
             gradient_accumulation_steps=self.cfg_train["gradient_accumulation_steps"],
+            gradient_checkpointing=True,
             learning_rate=self.cfg_train["learning_rate"],
             warmup_steps=self.cfg_train["warmup_steps"],
             save_steps=self.cfg_train["save_steps"],
             eval_steps=self.cfg_train["eval_steps"],
             logging_steps=self.cfg_train["logging_steps"],
-            evaluation_strategy="steps",
+            eval_strategy="steps",
             save_strategy="steps",
             load_best_model_at_end=True,
             max_grad_norm=self.cfg_train["max_grad_norm"],
             weight_decay=self.cfg_train["weight_decay"],
             fp16=device == "cuda" and self.cfg_train.get("fp16", False),
-            no_cuda=device == "cpu",
+            use_cpu=device == "cpu",
             seed=self.cfg_train["seed"],
             report_to="none",
             dataloader_num_workers=0,
@@ -197,3 +224,12 @@ class LoRAFineTuner:
                 missing.append(pkg)
         if missing:
             raise ImportError(f"Missing packages: {missing}. Run: pip install {' '.join(missing)}")
+
+    @staticmethod
+    def _bitsandbytes_available() -> bool:
+        """Return True if bitsandbytes is importable (needed for 8-bit loading)."""
+        try:
+            import bitsandbytes  # noqa: F401
+            return True
+        except ImportError:
+            return False

@@ -1,0 +1,146 @@
+[
+  {
+    "question": "What is the main difference between how RNNs and modern transformers operate?",
+    "answer": "RNNs process tokens sequentially from start to finish, while modern transformers can parallelize over all tokens in a sequence.",
+    "type": "reasoning",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more precise by specifying that modern transformers can operate in parallel over all tokens in a sequence."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "How does the linearly scaling fast weight controller differ from slow neural networks?",
+    "answer": "The fast weight controller modifies weights based on inputs in a way that's directly controllable, whereas slow neural networks adjust weights through gradient descent.",
+    "type": "reasoning",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more precise by providing specific examples of how the fast weight controller modifies weights and slow neural networks adjust them through gradient descent."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "What is the origin of seq2seq models and how did it evolve over time?",
+    "answer": "The seq2seq model was developed in the early 2010s, with its origins being two concurrent papers published in 2014 that introduced seq2seq.",
+    "type": "reasoning",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more specific about the two concurrent papers that introduced seq2seq models and their publication dates."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "What is the key difference between RNNs and modern transformers when it comes to processing sequences?",
+    "answer": "Modern transformers can operate in parallel over all tokens in a sequence, whereas RNNs cannot. This means that while both models process sequential data, modern transformers can handle larger context windows more efficiently.",
+    "type": "conceptual",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more specific and provide a clear comparison between RNNs and modern transformers."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "How do the fast weight controller and linearly scaling fast weight learning mechanisms differ?",
+    "answer": "The fast weight controller learns to compute a weight matrix based on input patterns. The linearly scaling fast weight mechanism further optimizes this process by adjusting weights in proportion to the context window size, which can be more efficient for certain tasks.",
+    "type": "conceptual",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 9.0,
+      "overall": 8.25,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more precise by providing specific examples of how these mechanisms work and their implications."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "What was one of the key contributions of the paper mentioned as the originators of seq2seq?",
+    "answer": "This paper introduced a significant improvement by showing that the seq2seq mechanism could be effectively implemented using two networks, providing insights into how to structure such models for better performance and scalability.",
+    "type": "conceptual",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more specific about the key contributions of the seq2seq mechanism."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "What does RNN stand for?",
+    "answer": "Recurrent Neural Network",
+    "type": "definition",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 7.0,
+      "clarity": 9.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly correct but could be more specific by providing an example of a RNN in action, such as language modeling or sequence prediction."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "How are modern transformers different from traditional RNNs in terms of sequence processing?",
+    "answer": "Modern transformers process sequences sequentially, whereas RNNs can operate parallelly.",
+    "type": "definition",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 10.0,
+      "overall": 8.3,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more precise by specifying that modern transformers can operate parallelly over all tokens in a sequence."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  },
+  {
+    "question": "What does the linear scaling fast weight controller learn to do?",
+    "answer": "The linear scaling fast weight controller learns to compute weights for further processing based on input.",
+    "type": "definition",
+    "chunk_id": 1,
+    "quality_scores": {
+      "relevance": 9.0,
+      "clarity": 7.0,
+      "answer_quality": 8.0,
+      "educational_value": 9.0,
+      "overall": 8.0,
+      "feedback": "The answer is mostly grounded in the source text, but it could be more precise by specifying that the fast weight controller learns to compute weights for further processing based on input."
+    },
+    "refinement_iterations": 0,
+    "accepted": true
+  }
+]

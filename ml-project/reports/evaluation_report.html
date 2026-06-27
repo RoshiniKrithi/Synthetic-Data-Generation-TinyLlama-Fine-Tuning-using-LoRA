@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Evaluation Report</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+  th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+  th { background: #f4f4f4; }
+  tr:nth-child(even) { background: #fafafa; }
+  h1 { color: #333; }
+</style>
+</head>
+<body>
+  <h1>Evaluation Report</h1>
+  <p><strong>Samples evaluated:</strong> 50</p>
+  <h2>Metrics Comparison</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>Base Model</th><th>Fine-Tuned</th><th>Improvement</th></tr></thead>
+    <tbody><tr><td>exact_match</td><td>0.0</td><td>0.0</td><td style='color:green'>+0.0</td></tr><tr><td>bleu</td><td>0.05</td><td>0.03</td><td style='color:red'>-0.02</td></tr><tr><td>rouge_l</td><td>4.79</td><td>4.83</td><td style='color:green'>+0.04</td></tr><tr><td>bertscore_f1</td><td>0.0</td><td>70.91</td><td style='color:green'>+70.91</td></tr><tr><td>avg_latency_s</td><td>34.129</td><td>12.955</td><td style='color:red'>-21.17</td></tr></tbody>
+  </table>
+</body>
+</html>

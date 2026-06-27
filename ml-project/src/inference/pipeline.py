@@ -28,8 +28,8 @@ def _build_prompt(question: str, model_name: str) -> str:
             f"<|user|>\n{question}\n"
             f"<|assistant|>\n"
         )
-    # Generic causal-LM format (GPT-2, etc.)
-    return f"Q: {question}\nA:"
+    # Generic causal-LM format (GPT-2, etc.) — must match training format
+    return f"Question: {question}\nAnswer:"
 
 
 class InferencePipeline:

@@ -1,0 +1,35 @@
+{
+  "summary": {
+    "total_generated": 9,
+    "total_critiqued": 9,
+    "total_refined": 0,
+    "total_accepted": 9,
+    "total_rejected": 0,
+    "total_duplicates": 0,
+    "acceptance_rate_pct": 100.0
+  },
+  "quality": {
+    "average_overall_score": 8.26,
+    "min_score": 8.0,
+    "max_score": 8.3,
+    "dimension_averages": {
+      "relevance": 8.78,
+      "clarity": 7.22,
+      "answer_quality": 8.0,
+      "educational_value": 9.78
+    }
+  },
+  "refinement": {
+    "pairs_refined": 0,
+    "avg_refinement_iterations": 0.0,
+    "max_refinement_iterations": 0
+  },
+  "score_distribution": {
+    "1-4": 0,
+    "4-6": 0,
+    "6-7": 0,
+    "7-8": 0,
+    "8-9": 9,
+    "9-10": 0
+  }
+}

@@ -23,8 +23,8 @@ scraper:
   retry_delay: 2
 
 generator:
-  ollama_model: "mistral"
-  ollama_base_url: "http://localhost:11434"
+  ollama_model: "qwen2.5:1.5b"
+  ollama_base_url: "http://127.0.0.1:11434"
   qa_pairs_per_chunk: 5
   max_qa_pairs: 300
   temperature: 0.7
@@ -36,29 +36,29 @@ generator:
   retry_attempts: 3
 
 model:
-  base_model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-  max_length: 512
+  base_model: "gpt2"
+  max_length: 256
   device: "auto"
 
 lora:
-  r: 16
-  alpha: 32
+  r: 4
+  alpha: 8
   dropout: 0.05
   target_modules:
-    - "q_proj"
-    - "v_proj"
+    - "c_attn"
+    - "c_proj"
   bias: "none"
   task_type: "CAUSAL_LM"
 
 training:
-  epochs: 3
-  batch_size: 4
-  gradient_accumulation_steps: 2
+  epochs: 2
+  batch_size: 1
+  gradient_accumulation_steps: 8
   learning_rate: 2.0e-4
-  warmup_steps: 100
-  save_steps: 100
-  eval_steps: 100
-  logging_steps: 10
+  warmup_steps: 50
+  save_steps: 50
+  eval_steps: 50
+  logging_steps: 5
   max_grad_norm: 1.0
   weight_decay: 0.001
   fp16: false
@@ -97,3 +97,29 @@ logging:
   level: "INFO"
   format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
   file: "logs/project.log"
+
+# ── Multi-Agent Synthetic Data System ──────────────────────────────────────
+# Activated via: python run_all.py --phases 2 --use-agents
+agents:
+  # Ollama model used by all 3 agents (can differ per agent via overrides below)
+  model: "qwen2.5:1.5b"
+
+  # Q&A pairs to generate per chunk/type before scoring
+  pairs_per_chunk: 3
+
+  # Maximum total accepted pairs (budget shared across all chunks)
+  max_qa_pairs: 200
+
+  # Pairs scoring >= quality_threshold (out of 10) are accepted
+  quality_threshold: 7.0
+
+  # Max Refiner attempts per pair before discarding
+  max_refine_iterations: 3
+
+  # Per-agent temperatures (Critic should be deterministic)
+  temperature: 0.7           # Generator
+  critic_temperature: 0.1    # Critic — more deterministic scoring
+  refiner_temperature: 0.5   # Refiner — creative but constrained
+
+  # Retry attempts for Ollama API calls
+  retry_attempts: 3

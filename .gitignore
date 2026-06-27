@@ -47,3 +47,22 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Large binaries, models, caches, and logs
+hf_cache/
+ollama_models/
+ml-project/OllamaSetup.exe
+ml-project/models/
+ml-project/logs/

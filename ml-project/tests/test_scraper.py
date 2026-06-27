@@ -111,10 +111,10 @@ class TestQAGenerator(unittest.TestCase):
             },
             "paths": {"data_synthetic": "/tmp/test_syn"},
         }
-        raw = '[{"question": "What is X?", "answer": "X is a thing.", "type": "factual"}]'
+        raw = '[{"question": "What is Python?", "answer": "Python is a programming language.", "type": "factual"}]'
         pairs = QAGenerator._parse_response(raw, "factual", 0)
         self.assertEqual(len(pairs), 1)
-        self.assertEqual(pairs[0]["question"], "What is X?")
+        self.assertEqual(pairs[0]["question"], "What is Python?")
 
     def test_parse_response_invalid_json(self):
         from src.generator.qa_generator import QAGenerator

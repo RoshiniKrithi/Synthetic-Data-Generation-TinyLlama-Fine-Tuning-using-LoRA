@@ -33,3 +33,10 @@ evaluate>=0.4.0
 tqdm>=4.65.0
 PyYAML>=6.0.0
 ollama>=0.1.7
+
+# API server (launch_ui.py FastAPI wrapper)
+fastapi>=0.111.0
+uvicorn>=0.29.0
+
+# Terminal UI / rich progress display
+rich>=13.7.0

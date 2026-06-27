@@ -140,6 +140,15 @@ python run_all.py --skip-training
 
 # Create public share link
 python run_all.py --phases 7 --share
+
+# Resume from last checkpoint (skip already-completed phases)
+python run_all.py --resume
+
+# Clear checkpoint and force full re-run
+python run_all.py --reset-checkpoint
+
+# Disable rich progress display (plain logs only)
+python run_all.py --no-progress
 ```
 
 ---
@@ -230,6 +239,40 @@ training:
 - **Reproducibility** — fixed seeds, config-driven everything
 - **Phase isolation** — each phase reads/writes from disk; restart from any phase
 - **CPU/GPU compatibility** — auto-detects best device
+- **Checkpoint / Resume** — `--resume` skips phases already recorded as done in `logs/pipeline_checkpoint.json`
+- **Rich Progress Display** — live terminal table showing phase status, elapsed time, and details (requires `rich`)
+- **Comprehensive Test Suite** — 111+ unit tests across 6 modules with zero ML-model downloads required
+
+---
+
+## Running Tests
+
+```bash
+# Run all unit tests (fast, no GPU/Ollama needed)
+python -m pytest tests/ -v
+
+# Run a specific module
+python -m pytest tests/test_scraper.py -v
+python -m pytest tests/test_generator.py -v
+python -m pytest tests/test_utils.py -v
+python -m pytest tests/test_analysis.py -v
+python -m pytest tests/test_inference.py -v
+python -m pytest tests/test_evaluation.py -v
+
+# Run with coverage
+python -m pytest tests/ --cov=src --cov-report=term-missing
+```
+
+### Test Coverage
+
+| Module | Tests | What's Covered |
+|--------|-------|----------------|
+| `test_scraper.py` | 8 | HTML extraction, chunking, retry logic |
+| `test_generator.py` | 17 | JSON parsing, deduplication, Ollama mock |
+| `test_analysis.py` | 12 | Stats, charts, edge cases |
+| `test_inference.py` | 16 | Prompt format, lazy load, adapter fallback |
+| `test_evaluation.py` | 16 | Normalize, metrics, report files |
+| `test_utils.py` | 22 | Helpers, checkpoint, progress display |
 
 ---
 
